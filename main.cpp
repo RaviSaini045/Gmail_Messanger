@@ -264,6 +264,67 @@ void user::starUnstar_msg(msg *head)
 	}
 }
 
+//to read msg from search results or from starred msg list
+void user::vec_read_msg(vector<msg*> results)
+{
+	unsigned int no = unsigned(input_num("\nEnter message no. to read: "));
+
+	if (no < 1 || no > results.size())
+	{
+		cout << "\nInvalid message no.";
+		return;
+	}
+
+	msg *ptr = results.at(no - 1);
+	cout << "\n..................................................................";
+	cout << "\n************** MESSAGE " << no << " **************";
+	cout << "\nFrom : " << ptr->from;
+	cout << "\nTo : " << ptr->to;
+	cout << "\nWhen : " << ptr->dt;
+	cout << "\nMessage : \n" << ptr->text;
+	cout << "\n...................................................................\n";
+	ptr->read = true;
+}
+
+//to delete msg from search results or from starred msg list
+void user::vec_del_msg(vector<msg*> results, msg **head)
+{
+	unsigned int no = unsigned(input_num("\nEnter message no. to delete: "));
+
+	if (no < 1 || no > results.size())
+	{
+		cout << "\nInvalid message no.";
+		return;
+	}
+
+	msg *ptr = *head;
+	msg *prev = *head;
+
+	if (results.at(no - 1) == *head)
+	{
+		*head = (*head)->link;
+		cout << "\nMessage deleted successfully!";
+		trash.push_back(ptr);
+		results.erase(results.begin() + no - 1);
+		return;
+	}
+	for (ptr = *head; ptr != results.at(no - 1);)
+	{
+		prev = ptr;
+		ptr = ptr->link;
+		if (ptr == NULL)
+		{
+			cout << "Invalid message no.\n";
+			return;
+		}
+	}
+	prev->link = ptr->link;
+	ptr = results.at(no - 1);
+	trash.push_back(ptr);
+	results.erase(results.begin() + no - 1);
+	cout << "Message deleted successfully!!\n";
+}
+
 int main()
 {
 	int ch;
