@@ -88,6 +88,107 @@ class user
 
 };
 
+
+//to display list of sent/inbox msg
+void user::display_msgs(string title, msg *head)
+{
+	string R[] = { "unread", "read" };
+	string S[] = { "unstarred", "starred" };
+	cout <<"\n******************************* " <<title<< " *******************************";
+
+	if (head == NULL)
+		cout << "\nNo messages to display yet!\n";
+
+	else
+	{
+		int i = 1;
+		cout << "\n-------------------------------------------------------------------------------------------------";
+		cout << "\n" << setw(5) << "No." << setw(15) << "From" << setw(15)
+				<< "To" << setw(15) << "Message" << setw(14) << "When"
+				<< setw(10) << "Status" << setw(14) << "Starred";
+		cout << "\n-------------------------------------------------------------------------------------------------";
+
+		msg *m = head;
+		while (m != NULL)
+		{
+			cout << "\n" << setw(5) << i << setw(15) << m->from << setw(15)
+					<< m->to << setw(15) << m->text.substr(0, 8) << "..."
+					<< setw(14) << m->dt.substr(4, 6) << setw(10) << R[m->read]
+					<< setw(14) << S[m->star];
+			cout << "\n-------------------------------------------------------------------------------------------------";
+			m = m->link;
+			i++;
+		}
+	}
+}
+
+//actions user can perform with displayed list of msg
+void user::msg_options(string title, msg **head)
+{
+	int ch;
+	do
+	{
+		display_msgs(title, *head);
+		if (*head == NULL)
+			return;
+		cout << "\n********* " << title << " OPTIONS **********";
+		cout << "\n0. Exit";
+		cout << "\n1. Read a message";
+		cout << "\n2. Delete a message";
+		cout << "\n3. Star/Unstar a message";
+		ch = input_num("\nEnter your choice: ");
+		cout << "\n---------------------------------------------";
+
+		switch (ch)
+		{
+			case 0:
+				break;
+
+			case 1:
+				read_msg(*head);
+				break;
+
+			case 2:
+				del_msg(head);
+				break;
+
+			case 3:
+				starUnstar_msg(*head);
+				break;
+		}
+	} while (ch != 0);
+}
+
+//to read a certain msg
+void user::read_msg(msg *head)
+{
+	int no;
+	no = input_num("\nEnter message no. to read: ");
+	if (no < 1)
+	{
+		cout << "\nInvalid message no.";
+		return;
+	}
+	msg *ptr = head;
+	for (int i = 1; i < no; i++)
+	{
+		ptr = ptr->link;
+		if (ptr == NULL)
+		{
+			cout << "\nInvalid message no.";
+			return;
+		}
+	}
+	cout << "\n..................................................................";
+	cout << "\n************** MESSAGE " << no << " **************";
+	cout << "\nFrom : " << ptr->from;
+	cout << "\nTo : " << ptr->to;
+	cout << "\nWhen : " << ptr->dt;
+	cout << "\nMessage : \n" << ptr->text;
+	cout << "\n...................................................................\n";
+	ptr->read = true;
+}
+
 int main()
 {
 	int ch;
