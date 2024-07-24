@@ -325,6 +325,124 @@ void user::vec_del_msg(vector<msg*> results, msg **head)
 	cout << "Message deleted successfully!!\n";
 }
 
+
+//to star/unstar msg from search results
+void user::vec_starUnstar(vector<msg*> results)
+{
+	unsigned int no = unsigned(input_num("\nEnter message no. to star/unstar: "));
+
+	if (no < 1 || no > results.size())
+	{
+		cout << "\nInvalid message no.";
+		return;
+	}
+
+	msg *ptr = results.at(no - 1);
+	if (ptr->star)
+	{
+		ptr->star = false;
+		cout << "Message no. " << no << " has been unstarred.\n";
+	}
+	else
+	{
+		ptr->star = true;
+		cout << "Message no. " << no << " has been starred.\n";
+	}
+}
+
+//to search msg sent to/ received from a user
+void user::search_msg(string title, msg **head)
+{
+	string un;
+	cout << "\nEnter the username: ";
+	cin >> un;
+
+	bool found = false;
+	msg *m = *head;
+	if (*head == NULL)
+	{
+		cout << "\nNo messages to display yet!";
+		return;
+	}
+
+	string cmp;
+
+	string R[] =  { "unread", "read" };
+	string S[] =  { "unstarred", "starred" };
+
+	int ch, i;
+	do
+	{
+		i = 0;
+		found = false;
+		vector<msg*> results;
+
+		for (m = *head; m != NULL; m = m->link)
+		{
+			if (title == "SENT TO ")
+				cmp = m->to;
+			else //"RECEIVED FROM "
+				cmp = m->from;
+
+			if (cmp == un)
+			{
+				if (!found)
+				{
+					cout<<"\n**************************** MESSAGES " <<title<< un << " ****************************";
+					cout<< "\n-------------------------------------------------------------------------------------------------";
+					cout<< "\n" << setw(5) << "No." << setw(15) << "From"
+							<< setw(15) << "To" << setw(15) << "Message"
+							<< setw(14) << "When" << setw(10) << "Status"
+							<< setw(14) << "Starred";
+					cout<< "\n-------------------------------------------------------------------------------------------------";
+
+				}
+				i++;
+				found = true;
+				results.push_back(m);
+
+				cout << "\n" << setw(5) << i << setw(15) << m->from << setw(15)
+						<< m->to << setw(15) << m->text.substr(0, 8) << "..."
+						<< setw(14) << m->dt.substr(4, 6) << setw(10)
+						<< R[m->read] << setw(14) << S[m->star];
+				cout << "\n-------------------------------------------------------------------------------------------------";
+			}
+		}
+
+		if (m == NULL && !found)
+		{
+			cout << "\nNo messages found!\n";
+			return;
+		}
+
+		cout << "\n********* MESSAGE OPTIONS **********";
+		cout << "\n0. Exit";
+		cout << "\n1. Read a message";
+		cout << "\n2. Delete a message";
+		cout << "\n3. Star/Unstar a message";
+		ch = input_num("\nEnter your choice: ");
+		cout << "\n---------------------------------------------";
+
+		switch (ch)
+		{
+			case 0:
+				break;
+
+			case 1:
+				vec_read_msg(results);
+				break;
+
+			case 2:
+				vec_del_msg(results, head);
+				break;
+
+			case 3:
+				vec_starUnstar(results);
+				break;
+		}
+	} while (ch != 0);
+}
+
 int main()
 {
 	int ch;
