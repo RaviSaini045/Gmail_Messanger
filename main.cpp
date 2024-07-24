@@ -189,6 +189,81 @@ void user::read_msg(msg *head)
 	ptr->read = true;
 }
 
+
+//to delete a certain msg //it adds the deleted msg to trash
+void user::del_msg(msg **head)
+{
+	if (*head == NULL)
+	{
+		cout << "No messages found.\n";
+		return;
+	}
+
+	int no = input_num("\nEnter message no. to delete: ");
+
+	if (no < 1)
+	{
+		cout << "\nInvalid message no.";
+		return;
+	}
+
+	msg *ptr = *head;
+	msg *prev = *head;
+	if (no == 1)
+	{
+		*head = (*head)->link;
+		cout << "Message deleted successfully!!\n";
+		trash.push_back(ptr);
+		return;
+	}
+
+	for (int i = 1; i < no; i++)
+	{
+		prev = ptr;
+		ptr = ptr->link;
+		if (ptr == NULL)
+		{
+			cout << "Invalid message no.\n";
+			return;
+		}
+	}
+	prev->link = ptr->link;
+	trash.push_back(ptr);
+	cout << "Message deleted successfully!!\n";
+}
+
+//to mark an msg as important (star) or unstar
+void user::starUnstar_msg(msg *head)
+{
+	int no = input_num("\nEnter message no. to star/unstar: ");
+
+	if (no < 1)
+	{
+		cout << "\nInvalid message no.";
+		return;
+	}
+	msg *ptr = head;
+	for (int i = 1; i < no; i++)
+	{
+		ptr = ptr->link;
+		if (ptr == NULL)
+		{
+			cout << "\nInvalid message no.";
+			return;
+		}
+	}
+	if (ptr->star == false)
+	{
+		ptr->star = true;
+		cout << "Message no. " << no << " has been starred.\n";
+	}
+	else
+	{
+		ptr->star = false;
+		cout << "Message no. " << no << " has been unstarred.\n";
+	}
+}
+
 int main()
 {
 	int ch;
