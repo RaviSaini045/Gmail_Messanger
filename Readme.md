@@ -1,7 +1,7 @@
-# Simple Gmail-like Email System in C++
+# Simple Gmail_Messanger System in C++
 
 ## Overview
-We have created a basic version of a Gmail-like email system using C++. The system is designed to handle multiple user accounts and provide basic email functionalities such as sending, receiving, and managing messages. The core data structures used include a doubly linked list for storing user accounts and singly linked lists for managing sent and received messages per user.
+We have created a basic version of a  Gmail_Messangerl system using C++. The system is designed to handle multiple user accounts and provide basic email functionalities such as sending, receiving, and managing messages. The core data structures used include a doubly linked list for storing user accounts and singly linked lists for managing sent and received messages per user.
 
 ## Key Features and Functionalities
 
